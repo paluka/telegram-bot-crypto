@@ -1,9 +1,9 @@
-name: Run Script Every 1 Minute
+name: Run GitHub Action Workflow Every 5 Minute
 
 on:
   workflow_dispatch: # Allows manual triggering
   schedule:
-    - cron: "*/1 * * * *" # Runs every minute
+    - cron: "*/5 * * * *" # Runs every minute
 
 env:
   SLEEP_TIME: "60"
@@ -33,7 +33,14 @@ jobs:
 
       - name: Run Script
         run: |
-          while true; do
+          # Get the current time in seconds
+          NOW=$(date +%s)
+          # Set EXIT_TIME to 230 seconds after NOW (5 minutes - 30 seconds)
+          EXIT_TIME=$((NOW + 230))
+
+          while [ $(date +%s) -lt $EXIT_TIME ]; do
+            # Run the Python script
             python src/main.py
-            sleep ${SLEEP_TIME}
+            # Sleep for 30 seconds to prevent the loop from running too fast
+            sleep 30
           done
