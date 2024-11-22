@@ -1,9 +1,9 @@
-name: Run GitHub Action Workflow Every 5 Minute
+name: Run GitHub Action Workflow Every 6 hours
 
 on:
   workflow_dispatch: # Allows manual triggering
   schedule:
-    - cron: "*/5 * * * *" # Runs every minute
+    - cron: "*/2160 * * * *" # Runs every 6 hours
 
 env:
   SLEEP_TIME: "60"
@@ -35,12 +35,12 @@ jobs:
         run: |
           # Get the current time in seconds
           NOW=$(date +%s)
-          # Set EXIT_TIME to 230 seconds after NOW (5 minutes - 30 seconds)
-          EXIT_TIME=$((NOW + 230))
+          # Set EXIT_TIME to 21600 seconds after NOW (6 hours)
+          EXIT_TIME=$((NOW + 21600))
 
           while [ $(date +%s) -lt $EXIT_TIME ]; do
             # Run the Python script
             python src/main.py
-            # Sleep for 30 seconds to prevent the loop from running too fast
-            sleep 30
+            # Sleep for 60 seconds to prevent the loop from running too fast
+            sleep 60
           done
