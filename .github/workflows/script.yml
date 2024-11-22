@@ -1,9 +1,12 @@
-name: Run Script Every 10 Seconds
+name: Run Script Every 1 Minute
 
 on:
   workflow_dispatch: # Allows manual triggering
   schedule:
     - cron: "*/1 * * * *" # Runs every minute
+
+env:
+  SLEEP_TIME: "60"
 
 jobs:
   run-script:
@@ -32,5 +35,5 @@ jobs:
         run: |
           while true; do
             python src/main.py
-            sleep 10
+            sleep ${SLEEP_TIME}
           done
