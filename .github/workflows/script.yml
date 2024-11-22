@@ -20,6 +20,6 @@ jobs:
       - name: Run Script
         run: |
           while true; do
-            python script.py
+            python src/main.py
             sleep 10
           done
