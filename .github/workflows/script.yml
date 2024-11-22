@@ -3,7 +3,7 @@ name: Run GitHub Action Workflow Every 6 hours
 on:
   workflow_dispatch: # Allows manual triggering
   schedule:
-    - cron: "*/2160 * * * *" # Runs every 6 hours
+    - cron: "0 */6 * * *" # Runs every 6 hours
 
 env:
   SLEEP_TIME: "60"
@@ -41,6 +41,6 @@ jobs:
           while [ $(date +%s) -lt $EXIT_TIME ]; do
             # Run the Python script
             python src/main.py
-            # Sleep for 60 seconds to prevent the loop from running too fast
-            sleep 60
+            # Sleep for $SLEEP_TIME seconds to prevent the loop from running too fast
+            sleep $SLEEP_TIME
           done
