@@ -6,7 +6,8 @@ on:
     - cron: "0 */6 * * *" # Runs every 6 hours
 
 env:
-  SLEEP_TIME: "60"
+  SLEEP_TIME: "60" # 1 minute
+  TIME_LIMIT: "21300" # 5 hours and 55 minutes due to GitHub Actions 6 hour timeout limit
 
 jobs:
   run-script:
@@ -35,8 +36,8 @@ jobs:
         run: |
           # Get the current time in seconds
           NOW=$(date +%s)
-          # Set EXIT_TIME to 21600 seconds after NOW (6 hours)
-          EXIT_TIME=$((NOW + 21600))
+          # Set EXIT_TIME to $TIME_LIMIT seconds after NOW
+          EXIT_TIME=$((NOW + $TIME_LIMIT))
 
           while [ $(date +%s) -lt $EXIT_TIME ]; do
             # Run the Python script
