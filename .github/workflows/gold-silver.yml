@@ -1,0 +1,47 @@
+name: Run GitHub Action Workflow Every 6 hours
+
+on:
+  workflow_dispatch: # Allows manual triggering
+  schedule:
+    - cron: "0 */6 * * *" # Runs every 6 hours
+
+env:
+  SLEEP_TIME: "60" # 1 minute
+  TIME_LIMIT: "21300" # 5 hours and 55 minutes due to GitHub Actions 6 hour timeout limit
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set environment variables from secrets
+        run: |
+          echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
+          echo "TELEGRAM_GOLD_SILVER_CHAT_ID=${{ secrets.TELEGRAM_GOLD_SILVER_CHAT_ID }}" >> $GITHUB_ENV
+
+      - name: Run Script
+        run: |
+          # Get the current time in seconds
+          NOW=$(date +%s)
+          # Set EXIT_TIME to $TIME_LIMIT seconds after NOW
+          EXIT_TIME=$((NOW + $TIME_LIMIT))
+
+          while [ $(date +%s) -lt $EXIT_TIME ]; do
+            # Run the Python script
+            python src/gold-silver.py
+            # Sleep for $SLEEP_TIME seconds to prevent the loop from running too fast
+            sleep $SLEEP_TIME
+          done
